@@ -25,9 +25,9 @@ st.set_page_config(
 def main():
     st.title("Amsterdam Property Analysis - December 2024")
     
-    # File paths
-    base_path = "/Users/Valente/Documents/Python/241219_streamlit_funda"
-    file_path = os.path.join(base_path, "funda_listings_with_coords.csv")
+    # File paths using relative path resolution
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, "funda_listings_with_coords.csv")
     
     # Load and process data
     try:
