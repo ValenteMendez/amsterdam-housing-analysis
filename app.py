@@ -18,9 +18,13 @@ from helpers import format_price
 # Configuration
 st.set_page_config(
     page_title="Funda Property Analysis",
+    page_icon=":house:",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Set page configuration
+st.set_page_config(page_title="Financial Inclusion MX", page_icon="💸", layout="centered")
 
 def main():
     st.title("Amsterdam Property Analysis - December 2024")
