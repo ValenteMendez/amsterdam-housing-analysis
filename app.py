@@ -66,22 +66,20 @@ def main():
     max_price = int(df['price_numeric'].max())
     
     # Create tabs for different sections
-    tab1, tab2 = st.tabs(["map view", "market analysis"])
+    tab1, tab2 = st.tabs(["Map View", "Market Analysis"])
     
     with tab1:
         # Map filters section
         st.subheader("Map filter")
-        col1, col2 = st.columns(2)
+        col1, _ = st.columns(2)  # Use _ for unused column
         
         with col1:
-            # Add unique key to checkbox
             show_undervalued = st.checkbox(
-                "show only undervalued properties",
+                "Show Only Undervalued Properties",
                 key="map_undervalued_filter"
             )
-        
-        with col2:
-            # Create custom price range options
+            
+            # Price range options
             price_steps = [
                 50_000, 75_000, 100_000, 125_000, 150_000, 175_000, 200_000,
                 225_000, 250_000, 275_000, 300_000, 325_000, 350_000, 375_000, 400_000,
@@ -98,20 +96,22 @@ def main():
                 min_price_selected = st.selectbox(
                     "min price",
                     options=price_options[:-1],
-                    index=0
+                    index=0,
+                    key="min_price_select"  # Add unique key
                 )
+                # Convert selected min price to numeric
+                min_price_value = float(min_price_selected.replace('€', '').replace(',', ''))
             
             with price_col2:
                 min_idx = price_options.index(min_price_selected)
                 max_price_selected = st.selectbox(
                     "max price",
                     options=price_options[min_idx + 1:],
-                    index=len(price_options[min_idx + 1:]) - 1
+                    index=len(price_options[min_idx + 1:]) - 1,
+                    key="max_price_select"  # Add unique key
                 )
-            
-            # Convert selected prices back to numeric
-            min_price_value = float(min_price_selected.replace('€', '').replace(',', ''))
-            max_price_value = float(max_price_selected.replace('€', '').replace(',', ''))
+                # Convert selected max price to numeric
+                max_price_value = float(max_price_selected.replace('€', '').replace(',', ''))
         
         # Update mask with new price range values
         mask = (
