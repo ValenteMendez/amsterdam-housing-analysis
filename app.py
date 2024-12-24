@@ -74,9 +74,11 @@ def main():
         col1, _ = st.columns(2)  # Use _ for unused column
         
         with col1:
-            show_undervalued = st.checkbox(
-                "Show Only Undervalued Properties",
-                key="map_undervalued_filter"
+            # Changed checkbox logic - now shows all properties when checked
+            show_all = st.checkbox(
+                "Show all properties (takes time to load)",
+                value=False,  # Default to showing only undervalued
+                key="map_all_filter"
             )
             
             # Price range options
@@ -113,12 +115,13 @@ def main():
                 # Convert selected max price to numeric
                 max_price_value = float(max_price_selected.replace('€', '').replace(',', ''))
         
-        # Update mask with new price range values
+        # Updated mask logic
         mask = (
             (df['price_numeric'] >= min_price_value) &
             (df['price_numeric'] <= max_price_value)
         )
-        if show_undervalued:
+        
+        if not show_all:  # Show only undervalued by default
             mask &= df['is_undervalued']
         
         df_filtered = df[mask]
@@ -128,7 +131,8 @@ def main():
         
         with map_col1:
             st.subheader("Map of properties for sale in Amsterdam")
-            st.text("Remember to activate openstreetmap in the settings and click on a marker to see more details")
+            st.text("By default, showing undervalued properties.")
+            st.text("Remember to activate openstreetmap in the settings and click on a marker to see more details!")
             property_map = create_property_map(df_filtered)
             st_folium(
                 property_map,
@@ -157,7 +161,7 @@ def main():
                     "Average price/m²", 
                     format_price(df_filtered['price_per_sqm'].mean())
                 )
-        st.markdown("*Note: undervalued properties follow a proprietary algorithm, contact us for additional detail*")
+        st.markdown("*Note: undervalued properties calculated using a proprietary algorithm, contact us for additional detail.*")
     
     with tab2:
         
@@ -215,6 +219,8 @@ def main():
                 "Postal Codes",
                 f"{df['zip'].nunique():,}"  # Add comma separator
             )
+        
+        st.text("")
         
         st.subheader("Market Insights")
         
